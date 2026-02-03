@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 
 export default function Calculator() {
   const [display, setDisplay] = useState('0')
@@ -124,6 +124,72 @@ export default function Calculator() {
     setOperator(null)
     setWaitingForOperand(true)
   }
+
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
+    const key = e.key
+
+    // Digits 0-9 (both numpad and regular keys)
+    if (/^[0-9]$/.test(key)) {
+      e.preventDefault()
+      inputDigit(key)
+      return
+    }
+
+    // Decimal point
+    if (key === '.' || key === 'Decimal') {
+      e.preventDefault()
+      inputDecimal()
+      return
+    }
+
+    // Operators
+    if (key === '+' || key === 'Add') {
+      e.preventDefault()
+      performOperation('+')
+      return
+    }
+    if (key === '-' || key === 'Subtract') {
+      e.preventDefault()
+      performOperation('-')
+      return
+    }
+    if (key === '*' || key === 'Multiply') {
+      e.preventDefault()
+      performOperation('×')
+      return
+    }
+    if (key === '/' || key === 'Divide') {
+      e.preventDefault()
+      performOperation('÷')
+      return
+    }
+
+    // Equals / Enter
+    if (key === 'Enter' || key === '=') {
+      e.preventDefault()
+      calculate()
+      return
+    }
+
+    // Clear with Escape or Delete
+    if (key === 'Escape' || key === 'Delete') {
+      e.preventDefault()
+      clear()
+      return
+    }
+
+    // Backspace to delete last digit
+    if (key === 'Backspace') {
+      e.preventDefault()
+      setDisplay((prev) => (prev.length > 1 ? prev.slice(0, -1) : '0'))
+      return
+    }
+  }, [display, previousValue, operator, waitingForOperand])
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [handleKeyDown])
 
   const Button = ({
     children,
