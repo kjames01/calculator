@@ -5,8 +5,8 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'AI Calculator',
-  description: 'A smart calculator with AI-powered natural language math',
+  title: 'Calculator',
+  description: 'A scientific calculator with trigonometry functions',
 }
 
 export default function RootLayout({
